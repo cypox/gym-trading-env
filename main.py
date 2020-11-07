@@ -21,12 +21,12 @@ df.reset_index(inplace=True) # for some stupid reason we need this index column 
 # The algorithms require a vectorized environment to run
 env = DummyVecEnv([lambda: StockTradingEnv(df)])
 
-#model = PPO('MlpPolicy', env, verbose=1)
-#model.learn(total_timesteps=10)
+model = PPO('MlpPolicy', env, verbose=1)
+model.learn(total_timesteps=20000)
 
 obs = env.reset()
 for i in range(2000):
-  #action, _states = model.predict(obs)
-  action = [env.action_space.sample()]
+  action, _states = model.predict(obs)
+  #action = [env.action_space.sample()]
   obs, rewards, done, info = env.step(action)
   env.render()
