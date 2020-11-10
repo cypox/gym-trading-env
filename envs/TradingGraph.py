@@ -45,7 +45,7 @@ class TradingGraph:
     # Plot net worths
     mpf.plot(net_worth_df, type='line', hlines=dict(hlines=[10000],colors=['r'],linestyle='-.'), ax=self.net_worth_ax, linecolor='#00ff00', ylabel='Net Worth')
 
-    self.net_worth_ax.xaxis.tick_top()
+    #self.net_worth_ax.xaxis.tick_top()
 
     #last_date = self.df['Date'].values[current_step]
     last_date = self.net_worth_ax.get_xticks()[-2]
@@ -59,7 +59,7 @@ class TradingGraph:
                                 fontsize="small")
 
     # Add space above and below min/max net worth
-    self.net_worth_ax.set_ylim(min(self.net_worths[np.nonzero(self.net_worths)]) / 1.25, max(self.net_worths) * 1.25)
+    #self.net_worth_ax.set_ylim(min(self.net_worths[np.nonzero(self.net_worths)]) / 1.25, max(self.net_worths) * 1.25)
 
   def _render_price(self, current_step, net_worth, dates, step_range):
     self.price_ax.clear()

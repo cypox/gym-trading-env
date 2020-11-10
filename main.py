@@ -22,7 +22,7 @@ df.reset_index(inplace=True) # for some stupid reason we need this index column 
 env = DummyVecEnv([lambda: StockTradingEnv(df)])
 
 model = PPO('MlpPolicy', env, verbose=1)
-model.learn(total_timesteps=20000)
+model.learn(total_timesteps=200000)
 
 obs = env.reset()
 for i in range(2000):
