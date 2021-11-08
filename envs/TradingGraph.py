@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 import mplfinance as mpf
@@ -17,7 +18,7 @@ class TradingGraph:
 
   def __init__(self, df, title=None):
     self.df = df
-    self.net_worths = np.zeros(len(df['Date']))
+    self.net_worths = np.zeros(len(df['index']))
 
     # Create a figure on screen and set the title
     fig = plt.figure()
@@ -39,15 +40,16 @@ class TradingGraph:
 
     # Format the data
     net_worth_df = self.df.iloc[step_range].copy()
-    net_worth_df['Close'] = self.net_worths[step_range]
-    net_worth_df.set_index('Date', inplace=True)
+    net_worth_df['close'] = self.net_worths[step_range]
+    net_worth_df['index'] = pd.to_datetime(self.df['index'])
+    net_worth_df.set_index('index', inplace=True)
 
     # Plot net worths
     mpf.plot(net_worth_df, type='line', hlines=dict(hlines=[10000],colors=['r'],linestyle='-.'), ax=self.net_worth_ax, linecolor='#00ff00', ylabel='Net Worth')
 
     #self.net_worth_ax.xaxis.tick_top()
 
-    #last_date = self.df['Date'].values[current_step]
+    #last_date = self.df['index'].values[current_step]
     last_date = self.net_worth_ax.get_xticks()[-2]
     last_net_worth = self.net_worths[current_step]
 
@@ -67,12 +69,13 @@ class TradingGraph:
 
     # Format the data
     price_range = self.df.iloc[step_range]
-    price_range.set_index('Date', inplace=True)
+    price_range['index'] = pd.to_datetime(price_range['index'])
+    price_range.set_index('index', inplace=True)
 
-    #last_date = self.df['Date'].values[current_step]
+    #last_date = self.df['index'].values[current_step]
     last_date = self.net_worth_ax.get_xticks()[-2]
-    last_close = self.df['Close'].values[current_step]
-    last_high = self.df['High'].values[current_step]
+    last_close = self.df['close'].values[current_step]
+    last_high = self.df['high'].values[current_step]
 
     # Print the current price to the price axis
     self.price_ax.annotate('{0:.2f}'.format(last_close), (last_date, last_close),
@@ -91,7 +94,7 @@ class TradingGraph:
     step_range = range(window_start, current_step + 1)
 
     # Format dates
-    dates = np.array([x for x in self.df['Date'].values[step_range]])
+    dates = np.array([x for x in self.df['index'].values[step_range]])
 
     self._render_net_worth(current_step, net_worth, step_range, dates)
     self._render_price(current_step, net_worth, dates, step_range)
