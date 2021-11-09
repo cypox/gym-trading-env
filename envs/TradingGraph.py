@@ -40,8 +40,8 @@ class TradingGraph:
 
     # Format the data
     net_worth_df = self.df.iloc[step_range].copy()
-    net_worth_df['close'] = self.net_worths[step_range]
-    net_worth_df['index'] = pd.to_datetime(self.df['index'])
+    net_worth_df.loc[:, 'close'] = self.net_worths[step_range]
+    net_worth_df.loc[:, 'index'] = pd.to_datetime(self.df['index'])
     net_worth_df.set_index('index', inplace=True)
 
     # Plot net worths
@@ -68,8 +68,8 @@ class TradingGraph:
     self.volume_ax.clear()
 
     # Format the data
-    price_range = self.df.iloc[step_range]
-    price_range['index'] = pd.to_datetime(price_range['index'])
+    price_range = self.df.iloc[step_range].copy()
+    price_range.loc[:, 'index'] = pd.to_datetime(price_range['index'])
     price_range.set_index('index', inplace=True)
 
     #last_date = self.df['index'].values[current_step]

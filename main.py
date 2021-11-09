@@ -23,6 +23,7 @@ env = DummyVecEnv([lambda: StockTradingEnv(df)])
 
 model = PPO('MlpPolicy', env, verbose=1)
 model.learn(total_timesteps=2000)
+model.save("stock_trading_trained")
 
 obs = env.reset()
 for i in range(2000):
