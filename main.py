@@ -13,8 +13,18 @@ import pandas_datareader as web
 
 from datetime import datetime
 
-today = datetime.today().strftime('%Y-%m-%d')
-df = web.DataReader('TSLA', data_source='av-daily', start='2010-01-01', end=today, api_key='E1HH8I7PMXVTAGS9')
+import csv
+import requests
+
+use_trained = True
+
+
+url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=NIO&interval=1min&slice=year2month12&apikey=E1HH8I7PMXVTAGS9'
+url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=NIO&interval=1min&slice=year1month1&apikey=E1HH8I7PMXVTAGS9'
+df = pd.read_csv(url)
+
+#today = datetime.today().strftime('%Y-%m-%d')
+#df = web.DataReader('NIO', data_source='av-intraday', start='2021-10-01', end=today, api_key='E1HH8I7PMXVTAGS9')
 df.reset_index(inplace=True) # for some stupid reason we need this index column to be a number and not Date
 df.sort_values('index', inplace=True)
 
@@ -22,12 +32,16 @@ df.sort_values('index', inplace=True)
 env = DummyVecEnv([lambda: StockTradingEnv(df)])
 
 model = PPO('MlpPolicy', env, verbose=1)
-model.learn(total_timesteps=2000)
-model.save("stock_trading_trained")
+if use_trained:
+  model.load("nio-intraday-trained")
+else:
+  model.learn(total_timesteps=20000)
+  model.save("nio-intraday-trained")
 
 obs = env.reset()
 for i in range(2000):
   action, _states = model.predict(obs)
   #action = [env.action_space.sample()]
   obs, rewards, done, info = env.step(action)
+  print(rewards)
   env.render()

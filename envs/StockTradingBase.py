@@ -102,8 +102,9 @@ class StockTradingBase(gym.Env):
       self.current_step = 0
 
     delay_modifier = (self.current_step / MAX_STEPS)
+    delay_modifier = 1
 
-    reward = self.balance * delay_modifier
+    reward = self.net_worth * delay_modifier - INITIAL_ACCOUNT_BALANCE
     done = self.net_worth <= 0
 
     obs = self._next_observation()
