@@ -71,9 +71,10 @@ class StockTradingBase(gym.Env):
       prev_cost = self.cost_basis * self.shares_held
       additional_cost = shares_bought * current_price
 
-      self.balance -= additional_cost
-      self.cost_basis = (prev_cost + additional_cost) / (self.shares_held + shares_bought)
-      self.shares_held += shares_bought
+      if shares_bought > 0:
+        self.balance -= additional_cost
+        self.cost_basis = (prev_cost + additional_cost) / (self.shares_held + shares_bought)
+        self.shares_held += shares_bought
 
     elif action_type < 2:
       # Sell amount % of shares held
