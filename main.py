@@ -16,7 +16,7 @@ from datetime import datetime
 import csv
 import requests
 
-use_trained = True
+use_trained = False
 
 
 url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=NIO&interval=1min&slice=year2month12&apikey=E1HH8I7PMXVTAGS9'

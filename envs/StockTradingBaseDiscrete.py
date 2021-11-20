@@ -24,7 +24,7 @@ class StockTradingBaseDiscrete(gym.Env):
     self.reward_range = (0, MAX_ACCOUNT_BALANCE)
 
     # Actions of the format Buy, Sell, Hold
-    self.action_space = spaces.Discrete(2)
+    self.action_space = spaces.Discrete(3)
 
     # Prices contains the OHCL values for the last five prices
     self.observation_space = spaces.Box(low=0, high=1, shape=(6, 6), dtype=np.float16)
@@ -60,24 +60,24 @@ class StockTradingBaseDiscrete(gym.Env):
     # Set the current price to a random price within the time step
     current_price = random.uniform(self.df.loc[self.current_step, "open"], self.df.loc[self.current_step, "close"])
 
-    action_type = action[0]
-    amount = action[1]
+    action_type = action
+    amount = 1
 
-    if action_type < 1: #TODO: maybe consider how close or far is action_type form 1 to take decision
-      # Buy amount % of balance in shares
+    if action_type == 0: # hold
+      pass
+    elif action_type == 1: # buy 1 share if possible
       total_possible = int(self.balance / current_price)
-      shares_bought = int(total_possible * amount)
+      shares_bought = amount if total_possible >= amount else 0
       prev_cost = self.cost_basis * self.shares_held
-      additional_cost = shares_bought * current_price
+      additional_cost = amount * current_price
 
       if shares_bought > 0:
         self.balance -= additional_cost
         self.cost_basis = (prev_cost + additional_cost) / (self.shares_held + shares_bought)
         self.shares_held += shares_bought
 
-    elif action_type < 2:
-      # Sell amount % of shares held
-      shares_sold = int(self.shares_held * amount)
+    elif action_type == 2: # sell 1 share if possible
+      shares_sold = amount if self.shares_held >= amount else self.shares_held
       self.balance += shares_sold * current_price
       self.shares_held -= shares_sold
       self.total_shares_sold += shares_sold

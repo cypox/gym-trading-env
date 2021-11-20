@@ -1,7 +1,7 @@
-from .StockTradingBase import StockTradingBase
+from .StockTradingBaseDiscrete import StockTradingBaseDiscrete
 from .TradingGraph import TradingGraph
 
-class StockTradingEnv(StockTradingBase):
+class StockTradingEnv(StockTradingBaseDiscrete):
   def __init__(self, df):
     super(StockTradingEnv, self).__init__(df)
     self.viewer = None
