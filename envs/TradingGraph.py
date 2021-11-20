@@ -45,13 +45,13 @@ class TradingGraph:
     net_worth_df.set_index('index', inplace=True)
 
     # Plot net worths
-    mpf.plot(net_worth_df, type='line', hlines=dict(hlines=[10000],colors=['r'],linestyle='-.'), ax=self.net_worth_ax, linecolor='#00ff00', ylabel='Net Worth')
+    mpf.plot(net_worth_df, type='line', hlines=dict(hlines=[1000],colors=['r'],linestyle='-.'), ax=self.net_worth_ax, linecolor='#00ff00', ylabel='Net Worth')
 
     #self.net_worth_ax.xaxis.tick_top()
 
     # zoom y-axis to current window
-    ymin = min(9900, min(net_worth_df['close']) - 10)
-    ymax = max(10010, max(net_worth_df['close']) + 10)
+    ymin = min(990, min(net_worth_df['close']) - 10)
+    ymax = max(1010, max(net_worth_df['close']) + 10)
     self.net_worth_ax.set_ylim(ymin=ymin, ymax=ymax)
 
     #last_date = self.df['index'].values[current_step]
