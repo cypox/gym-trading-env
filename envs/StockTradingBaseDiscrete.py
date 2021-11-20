@@ -64,10 +64,10 @@ class StockTradingBaseDiscrete(gym.Env):
     amount = 1
 
     if action_type == 0: # hold
-      print('holding @ {}'.format(current_price))
+      #print('holding @ {}'.format(current_price))
       pass
     elif action_type == 1: # buy 1 share if possible
-      print('buying @ {}'.format(current_price))
+      #print('buying @ {}'.format(current_price))
       total_possible = int(self.balance / current_price)
       shares_bought = amount if total_possible >= amount else 0
       prev_cost = self.cost_basis * self.shares_held
@@ -79,7 +79,7 @@ class StockTradingBaseDiscrete(gym.Env):
         self.shares_held += shares_bought
 
     elif action_type == 2: # sell 1 share if possible
-      print('selling @ {}'.format(current_price))
+      #print('selling @ {}'.format(current_price))
       shares_sold = amount if self.shares_held >= amount else self.shares_held
       self.balance += shares_sold * current_price
       self.shares_held -= shares_sold

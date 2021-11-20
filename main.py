@@ -1,26 +1,19 @@
-import math
-import gym
-import json
-import datetime as dt
-
 from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3 import PPO
 
 from envs.StockTradingEnv import StockTradingEnv
 
 import pandas as pd
-import pandas_datareader as web
 
-from datetime import datetime
-
-import csv
-import requests
 
 use_trained = True
 
+function = 'TIME_SERIES_INTRADAY_EXTENDED'
+symbol = 'NIO'
+slice = 'year2month1' # oldest slice, for most recent use year1month12
+from API_KEY import api_key
+url = 'https://www.alphavantage.co/query?function=' + function + '&symbol=' + symbol + '&interval=1min&slice=' + slice + '&apikey=' + api_key
 
-url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=NIO&interval=1min&slice=year2month12&apikey=E1HH8I7PMXVTAGS9'
-#url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=NIO&interval=1min&slice=year1month1&apikey=E1HH8I7PMXVTAGS9'
 df = pd.read_csv(url)
 
 df.reset_index(inplace=True)
@@ -41,5 +34,5 @@ for i in range(2000):
   action, _states = model.predict(obs)
   #action = [env.action_space.sample()]
   obs, rewards, done, info = env.step(action)
-  #print(rewards)
+  #print('current net gain: {}'.format(rewards))
   env.render()
