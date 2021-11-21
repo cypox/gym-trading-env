@@ -24,9 +24,10 @@ class TradingGraph:
     fig = plt.figure()
     fig.suptitle(title)
 
-    self.net_worth_ax = fig.add_subplot(3,1,1)
-    self.price_ax = fig.add_subplot(3,1,2,sharex=self.net_worth_ax)
-    self.volume_ax = fig.add_subplot(3,1,3)
+    self.net_worth_ax = fig.add_subplot(4,1,1)
+    self.status_ax = fig.add_subplot(4,1,2)
+    self.price_ax = fig.add_subplot(4,1,3,sharex=self.net_worth_ax)
+    self.volume_ax = fig.add_subplot(4,1,4)
 
     # Add padding to make graph easier to view
     plt.subplots_adjust(wspace=0.2, hspace=0)
@@ -91,8 +92,15 @@ class TradingGraph:
 
     # Plot price using mplfinance candlesticks after scaling axis otherwise, the scaling would be visible each frame
     mpf.plot(price_range, type='candle', style='charles', ax=self.price_ax, volume=self.volume_ax)
+  
+  def _render_status(self, held_shares):
+    self.status_ax.annotate('# shares: {}'.format(held_shares), (0, 0),
+                             xytext=(0, 0),
+                             bbox=dict(boxstyle='round', fc='w', ec='k', lw=1),
+                             color="black",
+                             fontsize="small")
 
-  def render(self, current_step, net_worth, window_size=40):
+  def render(self, current_step, net_worth, held_shares, window_size=40):
     self.net_worths[current_step] = net_worth
 
     window_start = max(current_step - window_size, 0)
@@ -104,6 +112,7 @@ class TradingGraph:
     self._render_net_worth(current_step, net_worth, step_range, dates)
     self._render_price(current_step, net_worth, dates, step_range)
     #self._render_trades(current_step, trades, step_range)
+    self._render_status(held_shares)
 
     # Hide duplicate net worth date labels
     plt.setp(self.net_worth_ax.get_xticklabels(), visible=False)

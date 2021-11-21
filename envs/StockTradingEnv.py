@@ -12,4 +12,5 @@ class StockTradingEnv(StockTradingBaseDiscrete):
       if self.viewer == None:
         self.viewer = TradingGraph(self.df, kwargs.get('title', None))
       self.viewer.render(self.current_step,
-                        self.net_worth)
+                        self.net_worth,
+                        self.shares_held)
