@@ -1,4 +1,4 @@
-from stable_baselines3 import DQN
+from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.evaluation import evaluate_policy
 
@@ -25,7 +25,7 @@ df.sort_values('index', inplace=True)
 # The algorithms require a vectorized environment to run
 env = DummyVecEnv([lambda: StockTradingEnv(df)])
 
-model = DQN('MlpPolicy', env, verbose=1)
+model = PPO('MlpPolicy', env, verbose=1, tensorboard_log="./nio_trading_tensorboard/")
 if use_trained:
   model.load("nio-intraday-trained", env=env)
 else:

@@ -6,7 +6,7 @@ import numpy as np
 
 MAX_ACCOUNT_BALANCE = 2147483647
 MAX_NUM_SHARES = 2147483647
-MAX_SHARE_PRICE = 5000
+MAX_SHARE_PRICE = 100
 MAX_OPEN_POSITIONS = 5
 MAX_STEPS = 20000
 
@@ -63,7 +63,7 @@ class StockTradingBaseDiscrete(gym.Env):
     current_price = random.uniform(self.df.loc[self.current_step, "open"], self.df.loc[self.current_step, "close"])
 
     action_type = action
-    amount = 10
+    amount = 1
 
     if action_type == 0: # hold
       #print('holding @ {}'.format(current_price))
