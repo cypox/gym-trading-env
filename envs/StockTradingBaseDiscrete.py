@@ -27,7 +27,7 @@ class StockTradingBaseDiscrete(gym.Env):
     self.action_space = spaces.Discrete(3)
 
     # Prices contains the OHCL values for the last five prices
-    self.observation_space = spaces.Box(low=0, high=1, shape=(6, 6), dtype=np.float16)
+    self.observation_space = spaces.Box(low=0, high=1, shape=(5, 6), dtype=np.float16)
 
   def _next_observation(self):
     # Get the stock data points for the last 5 days and scale to between 0-1
@@ -53,6 +53,8 @@ class StockTradingBaseDiscrete(gym.Env):
       self.total_shares_sold / MAX_NUM_SHARES,
       self.total_sales_value / (MAX_NUM_SHARES * MAX_SHARE_PRICE),
     ]], axis=0)
+    # remove additional data
+    obs = np.array(frame)
 
     return obs
 
@@ -61,7 +63,7 @@ class StockTradingBaseDiscrete(gym.Env):
     current_price = random.uniform(self.df.loc[self.current_step, "open"], self.df.loc[self.current_step, "close"])
 
     action_type = action
-    amount = 1
+    amount = 10
 
     if action_type == 0: # hold
       #print('holding @ {}'.format(current_price))
