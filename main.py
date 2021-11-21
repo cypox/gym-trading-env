@@ -1,4 +1,4 @@
-from stable_baselines3 import A2C
+from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.evaluation import evaluate_policy
 
@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 
-use_trained = True
+use_trained = False
 
 function = 'TIME_SERIES_INTRADAY_EXTENDED'
 symbol = 'NIO'
@@ -25,7 +25,7 @@ df.sort_values('index', inplace=True)
 # The algorithms require a vectorized environment to run
 env = DummyVecEnv([lambda: StockTradingEnv(df)])
 
-model = A2C('MlpPolicy', env, verbose=1)
+model = DQN('MlpPolicy', env, verbose=1)
 if use_trained:
   model.load("nio-intraday-trained", env=env)
 else:
@@ -34,7 +34,7 @@ else:
 
 #mean_reward, std_reward = evaluate_policy(model, model.get_env(), n_eval_episodes=10)
 
-def decide(obs):
+def dummy_strategy(obs):
   obs = obs[0]
   moving_average = np.mean(obs[1][1:])
   if obs[1][0] > moving_average:
@@ -50,8 +50,8 @@ def decide(obs):
 
 obs = env.reset()
 for i in range(2000):
-  #action, _states = model.predict(obs)
-  action = decide(obs)
+  action, _states = model.predict(obs)
+  #action = dummy_strategy(obs)
   #action = [env.action_space.sample()]
   obs, rewards, done, info = env.step(action)
   print('current net gain: {}'.format(rewards))
